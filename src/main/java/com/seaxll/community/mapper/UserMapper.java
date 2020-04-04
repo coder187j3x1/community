@@ -3,6 +3,9 @@ package com.seaxll.community.mapper;
 import com.seaxll.community.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Component;
 
 /**
  * ClassName: UserMapper
@@ -13,8 +16,11 @@ import org.apache.ibatis.annotations.Mapper;
  * @since JDK 1.8
  */
 @Mapper
+@Component
 public interface UserMapper {
     @Insert("INSERT INTO USER(NAME, ACCOUNT_ID, TOKEN, GMT_CREATE, GMT_MODIFY) VALUES(#{name}, #{accountId}, #{token}, #{gmtCreate}, #{gmtModify})")
     void insertUser(User user);
 
+    @Select("SELECT * FROM USER WHERE TOKEN = #{token}")
+    User finByToken(@Param("token") String token);
 }
