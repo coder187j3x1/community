@@ -2,6 +2,8 @@ package com.seaxll.community.cotroller;
 
 import com.seaxll.community.dto.AccessTokenDTO;
 import com.seaxll.community.dto.GithubUser;
+import com.seaxll.community.mapper.UserMapper;
+import com.seaxll.community.model.User;
 import com.seaxll.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.util.UUID;
 
 /**
  * ClassName: AuthorizeController
@@ -33,6 +37,9 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
+    @Autowired(required = false)
+    private UserMapper userMapper;
+
     @GetMapping("/callback")
     public String callback(
             @RequestParam(name = "code") String code,
@@ -45,11 +52,20 @@ public class AuthorizeController {
         accessTokenDTO.setRedirect_uri(redirectUri);
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-        GithubUser user = githubProvider.getUser(accessToken);
-        if (user != null) {
-            // 登录成功，写cookie 和 session
+        GithubUser githubUser = githubProvider.getUser(accessToken);
+        if (githubUser != null) {
+            // 登录成功，
+            // TODO 存入数据库 写cookie 和 session
+            User user = new User();
+            user.setToken(UUID.randomUUID().toString());
+            user.setName(githubUser.getName());
+            user.setAccountId(String.valueOf(githubUser.getId()));
+            user.setGmtCreate(new Timestamp(System.currentTimeMillis()));
+            user.setGmtModify(user.getGmtCreate());
+            userMapper.insertUser(user);
+
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+            session.setAttribute("user", githubUser);
             return "redirect:/";
         } else {
             // 登录失败
