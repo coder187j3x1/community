@@ -19,6 +19,7 @@
         <fastjson.version>1.2.57</fastjson.version>
         <h2.version>1.4.200</h2.version>
         <springboot.mybatis.version>2.1.1</springboot.mybatis.version>
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
     <dependencies>
@@ -73,6 +74,13 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>-->
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 
