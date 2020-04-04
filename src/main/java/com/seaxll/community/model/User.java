@@ -20,4 +20,5 @@ public class User {
     private String token;
     private Timestamp gmtCreate;
     private Timestamp gmtModify;
+    private String avatarUrl;
 }
