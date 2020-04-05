@@ -28,6 +28,9 @@ public class QuestionService {
     private QuestionMapper questionMapper;
 
     public PaginationDTO getQuestionList(Integer page, Integer size) {
+        Integer count = questionMapper.count();
+        Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
+        page = verifyPage(page, totalPage);
         // 分页查询的起始地址
         Integer offset = size * (page - 1);
         List<Question> questionList = questionMapper.list(offset, size);
@@ -40,9 +43,38 @@ public class QuestionService {
             questionDTOList.add(questionDTO);
         });
         pagination.setQuestions(questionDTOList);
-        Integer count = questionMapper.count();
-        Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
+
         pagination.setPagination(totalPage, page);
         return pagination;
     }
+
+    public PaginationDTO list(Integer id, Integer page, Integer size) {
+        Integer count = questionMapper.count();
+        Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
+
+        page = verifyPage(page, totalPage);
+        // 分页查询的起始地址
+        Integer offset = size * (page - 1);
+        List<Question> questionList = questionMapper.findQuestionByCreateId(id, offset, size);
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        PaginationDTO pagination = new PaginationDTO();
+        questionList.forEach(question -> {
+            QuestionDTO questionDTO = new QuestionDTO(question);
+            User user = userMapper.findUserById(question.getCreatorId());
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        });
+        pagination.setQuestions(questionDTOList);
+
+        pagination.setPagination(totalPage, page);
+        return pagination;
+    }
+
+    private Integer verifyPage(Integer page, Integer totalPage) {
+        page = (0 < page && page < totalPage)
+                ? page
+                : (page < 0 ? 1 : totalPage);
+        return page;
+    }
+
 }
