@@ -49,7 +49,7 @@ public class QuestionService {
     }
 
     public PaginationDTO list(Integer id, Integer page, Integer size) {
-        Integer count = questionMapper.count();
+        Integer count = questionMapper.countByCreateId(id);
         Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
 
         page = verifyPage(page, totalPage);
