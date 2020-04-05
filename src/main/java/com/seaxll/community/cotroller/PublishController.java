@@ -1,9 +1,9 @@
 package com.seaxll.community.cotroller;
 
 import com.seaxll.community.mapper.QuestionMapper;
-import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.Question;
 import com.seaxll.community.model.User;
+import com.seaxll.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
 
 /**
  * ClassName: PublishController
@@ -27,10 +25,10 @@ import java.sql.Timestamp;
 public class PublishController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private UserService userService;
 
     @Autowired
-    UserMapper userMapper;
+    private QuestionMapper questionMapper;
 
     @GetMapping("/publish")
     public String publish() {
@@ -60,27 +58,9 @@ public class PublishController {
             return "publish";
         }
 
-        Question question = new Question();
-        question.setTitle(title);
-        question.setDescription(description);
-        question.setTag(tag);
-        question.setGmtCreate(new Timestamp(System.currentTimeMillis()));
-        question.setGmtModify(question.getGmtCreate());
+        User user = userService.userCookieVerify(request);
 
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    user = userMapper.findUserByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
+        Question question = new Question(title, description, tag, user);
 
         if (user == null) {
             model.addAttribute("error", "用户未登录");

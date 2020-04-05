@@ -24,4 +24,19 @@ public class Question {
     private Integer viewCount = 0;
     private Integer likeCount = 0;
     private String tag;
+
+    public Question() {
+
+    }
+
+    public Question(String title, String description, String tag, User user) {
+        this.title = title;
+        this.description = description;
+        this.tag = tag;
+        this.gmtCreate = new Timestamp(System.currentTimeMillis());
+        this.gmtModify = this.gmtCreate;
+        if (user != null) {
+            this.creatorId = user.getId();
+        }
+    }
 }

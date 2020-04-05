@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -38,9 +37,7 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
-    private String avatarUrl;
-
-    @Autowired(required = false)
+    @Autowired
     private UserMapper userMapper;
 
     @GetMapping("/callback")
@@ -59,15 +56,10 @@ public class AuthorizeController {
         GithubUser githubUser = githubProvider.getUser(accessToken);
         if (githubUser != null) {
             // 登录成功，
-            // TODO 存入数据库 写cookie 和 session
-            User user = new User();
             String token = UUID.randomUUID().toString();
-            user.setToken(token);
-            user.setName(githubUser.getName());
-            user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(new Timestamp(System.currentTimeMillis()));
-            user.setGmtModify(user.getGmtCreate());
-            user.setAvatarUrl(githubUser.getAvatarUrl());
+
+            User user = new User(githubUser.getName(), String.valueOf(githubUser.getId()), githubUser.getBio(), githubUser.getAvatarUrl());
+
             userMapper.insertUser(user);
             response.addCookie(new Cookie("token", token));
 

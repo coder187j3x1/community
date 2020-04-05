@@ -41,7 +41,8 @@ public class QuestionService {
         });
         pagination.setQuestions(questionDTOList);
         Integer count = questionMapper.count();
-        pagination.setPagination(count, page, size);
+        Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
+        pagination.setPagination(totalPage, page);
         return pagination;
     }
 }
