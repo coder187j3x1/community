@@ -34,6 +34,13 @@
             <version>${springboot.mybatis.version}</version>
         </dependency>
 
+        <!-- SpringBoot 热部署 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!--使用 thymeleaf 需要的依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
