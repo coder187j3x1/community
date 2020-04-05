@@ -18,6 +18,12 @@ import java.io.IOException;
  */
 @Component
 public class GithubProvider {
+    /**
+     * 使用 accessTokenDTO 调用 OkHttp 接口 访问 https://github.com/login/oauth/access_token 并解析返回结果中的 token
+     *
+     * @param accessTokenDTO accessTokenDTO
+     * @return String token
+     */
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
         String json = JSON.toJSONString(accessTokenDTO);
@@ -31,15 +37,20 @@ public class GithubProvider {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
-            System.out.println(string);
-            string = string.split("&")[0].split("=")[1];
-            return string;
+            String token = string.split("&")[0].split("=")[1];
+            return token;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * 使用获取的 token 访问 https://api.github.com/user ,  并返回 GitHub 的 用户对象的 Json 字符串
+     *
+     * @param accessToken 访问 https://api.github.com/user 的 token
+     * @return GithubUser
+     */
     public GithubUser getUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

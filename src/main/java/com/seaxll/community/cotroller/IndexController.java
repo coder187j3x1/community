@@ -1,8 +1,8 @@
 package com.seaxll.community.cotroller;
 
 import com.seaxll.community.dto.PaginationDTO;
+import com.seaxll.community.provider.UserProvider;
 import com.seaxll.community.service.QuestionService;
-import com.seaxll.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
 
     @Autowired
-    private UserService userService;
+    private UserProvider userProvider;
 
     @Autowired
     private QuestionService questionService;
@@ -32,7 +32,7 @@ public class IndexController {
     public String index(HttpServletRequest request, Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size) {
-        userService.userCookieVerify(request);
+        userProvider.userCookieVerify(request);
         PaginationDTO pagination = questionService.getQuestionList(page, size);
         model.addAttribute("pagination", pagination);
         return "index";

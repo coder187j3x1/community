@@ -1,4 +1,4 @@
-package com.seaxll.community.service;
+package com.seaxll.community.provider;
 
 import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.User;
@@ -9,7 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * ClassName: UserService
+ * ClassName: UserProvider
  * Description:
  * date: 2020/4/5 19:05
  *
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since JDK 1.8
  */
 @Service
-public class UserService {
+public class UserProvider {
     @Autowired
     private UserMapper userMapper;
 
