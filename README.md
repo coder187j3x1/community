@@ -33,5 +33,15 @@
    ```
 3. 通过获取的access_token 换取 用户信息: https://api.github.com/user，参数：
     - access_token：第二步得到的 access_token 令牌
+    
+### 项目逻辑
+- 实体类
+    - 数据库模型 model
+    - 传输层模型 DTO(Data Transfer Object)
+- DAO (Data Access Object)
+- 控制层
+- 服务层
+
+
 ### 资料
 [Github OAuth](https://developer.github.com/apps/building-github-apps/)
