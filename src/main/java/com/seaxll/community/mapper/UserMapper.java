@@ -22,5 +22,8 @@ public interface UserMapper {
     void insertUser(User user);
 
     @Select("SELECT * FROM USER WHERE TOKEN = #{token}")
-    User finByToken(@Param("token") String token);
+    User findUserByToken(@Param("token") String token);
+
+    @Select("SELECT * FROM USER WHERE ID = #{id}")
+    User findUserById(@Param("id") Integer id);
 }

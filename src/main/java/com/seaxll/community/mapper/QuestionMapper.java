@@ -3,7 +3,11 @@ package com.seaxll.community.mapper;
 import com.seaxll.community.model.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
 
 /**
  * ClassName: QuestionMapper
@@ -21,4 +25,6 @@ public interface QuestionMapper {
             "VALUES(#{title}, #{description}, #{gmtCreate}, #{gmtModify}, #{creatorId}, #{commentCount}, #{viewCount}, #{likeCount}, #{tag})")
     void insertQuestion(Question question);
 
+    @Select("SELECT * FROM QUESTION")
+    List<Question> list();
 }

@@ -73,7 +73,7 @@ public class PublishController {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
                     String token = cookie.getValue();
-                    user = userMapper.finByToken(token);
+                    user = userMapper.findUserByToken(token);
                     if (user != null) {
                         request.getSession().setAttribute("user", user);
                     }
