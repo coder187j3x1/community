@@ -26,9 +26,8 @@ public class UserProvider {
      *  有就在数据库中查询用户，并将用户对象存入session
      *
      * @param request request
-     * @return user 用户
      */
-    public User userCookieVerify(HttpServletRequest request) {
+    public void userCookieVerify(HttpServletRequest request) {
         User user = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length != 0) {
@@ -45,7 +44,6 @@ public class UserProvider {
                 }
             }
         }
-        return user;
     }
 
 

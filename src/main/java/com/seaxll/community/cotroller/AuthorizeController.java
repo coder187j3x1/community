@@ -51,7 +51,7 @@ public class AuthorizeController {
             // 登录成功，
             String token = UUID.randomUUID().toString();
 
-            User user = new User(githubUser.getName(), String.valueOf(githubUser.getId()), githubUser.getBio(), githubUser.getAvatarUrl());
+            User user = new User(githubUser.getName(), String.valueOf(githubUser.getId()), token, githubUser.getAvatarUrl());
 
             userMapper.insertUser(user);
             response.addCookie(new Cookie("token", token));

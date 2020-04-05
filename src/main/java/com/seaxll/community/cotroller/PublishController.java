@@ -3,7 +3,6 @@ package com.seaxll.community.cotroller;
 import com.seaxll.community.mapper.QuestionMapper;
 import com.seaxll.community.model.Question;
 import com.seaxll.community.model.User;
-import com.seaxll.community.provider.UserProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +22,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class PublishController {
-
-    @Autowired
-    private UserProvider userProvider;
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -58,7 +54,7 @@ public class PublishController {
             return "publish";
         }
 
-        User user = userProvider.userCookieVerify(request);
+        User user = (User) request.getSession().getAttribute("user");
 
         Question question = new Question(title, description, tag, user);
 
