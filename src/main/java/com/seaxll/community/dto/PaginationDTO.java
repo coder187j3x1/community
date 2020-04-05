@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * ClassName: PageDTO
+ * ClassName: PaginationDTO
  * Description:
  * date: 2020/4/5 14:56
  *
@@ -14,7 +14,7 @@ import java.util.List;
  * @since JDK 1.8
  */
 @Data
-public class PageDTO {
+public class PaginationDTO {
     private List<QuestionDTO> questions;
     private boolean showPrevious;
     private boolean showFirstPage;

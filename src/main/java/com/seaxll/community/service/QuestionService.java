@@ -1,5 +1,6 @@
 package com.seaxll.community.service;
 
+import com.seaxll.community.dto.PaginationDTO;
 import com.seaxll.community.dto.QuestionDTO;
 import com.seaxll.community.mapper.QuestionMapper;
 import com.seaxll.community.mapper.UserMapper;
@@ -31,6 +32,7 @@ public class QuestionService {
         Integer offset = size * (page - 1);
         List<Question> questionList = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+        PaginationDTO page = new PaginationDTO();
         questionList.forEach(question -> {
             QuestionDTO questionDTO = new QuestionDTO(question);
             User user = userMapper.findUserById(question.getId());
