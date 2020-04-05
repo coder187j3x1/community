@@ -26,8 +26,10 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public List<QuestionDTO> getQuestionList() {
-        List<Question> questionList = questionMapper.list();
+    public List<QuestionDTO> getQuestionList(Integer page, Integer size) {
+        // 分页查询的起始地址
+        Integer offset = size * (page - 1);
+        List<Question> questionList = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         questionList.forEach(question -> {
             QuestionDTO questionDTO = new QuestionDTO(question);
