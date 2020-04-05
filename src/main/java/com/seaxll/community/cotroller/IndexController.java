@@ -1,6 +1,6 @@
 package com.seaxll.community.cotroller;
 
-import com.seaxll.community.dto.QuestionDTO;
+import com.seaxll.community.dto.PaginationDTO;
 import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.User;
 import com.seaxll.community.service.QuestionService;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * ClassName: IndexController
@@ -48,9 +47,8 @@ public class IndexController {
                 }
             }
         }
-        // Todo 加载问题列表
-        List<QuestionDTO> questionList = questionService.getQuestionList(page, size);
-        model.addAttribute("questions", questionList);
+        PaginationDTO pagination = questionService.getQuestionList(page, size);
+        model.addAttribute("pagination", pagination);
         return "index";
     }
 }

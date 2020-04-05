@@ -27,18 +27,21 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public List<QuestionDTO> getQuestionList(Integer page, Integer size) {
+    public PaginationDTO getQuestionList(Integer page, Integer size) {
         // 分页查询的起始地址
         Integer offset = size * (page - 1);
         List<Question> questionList = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-        PaginationDTO page = new PaginationDTO();
+        PaginationDTO pagination = new PaginationDTO();
         questionList.forEach(question -> {
             QuestionDTO questionDTO = new QuestionDTO(question);
-            User user = userMapper.findUserById(question.getId());
+            User user = userMapper.findUserById(question.getCreatorId());
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         });
-        return questionDTOList;
+        pagination.setQuestions(questionDTOList);
+        Integer count = questionMapper.count();
+        pagination.setPagination(count, page, size);
+        return pagination;
     }
 }
