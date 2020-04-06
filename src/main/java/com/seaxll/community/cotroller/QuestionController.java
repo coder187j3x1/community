@@ -31,6 +31,8 @@ public class QuestionController {
             e.printStackTrace();
         }
         QuestionDTO questionDTO = questionService.getQuestionById(questionId);
+        questionDTO.setViewCount(questionDTO.getViewCount() + 1);
+        questionService.addViewCount(questionId, questionDTO.getViewCount());
         model.addAttribute("question", questionDTO);
         return "question";
     }

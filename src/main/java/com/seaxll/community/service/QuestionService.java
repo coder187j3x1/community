@@ -135,4 +135,14 @@ public class QuestionService {
             questionMapper.insertQuestion(question);
         }
     }
+
+    /**
+     * 更新访问量
+     *
+     * @param questionId id
+     * @param viewCount 访问量
+     */
+    public void addViewCount(Integer questionId, Integer viewCount) {
+        questionMapper.updateQuestionViewCount(questionId, viewCount);
+    }
 }
