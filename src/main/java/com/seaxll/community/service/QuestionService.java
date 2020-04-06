@@ -2,6 +2,8 @@ package com.seaxll.community.service;
 
 import com.seaxll.community.dto.PaginationDTO;
 import com.seaxll.community.dto.QuestionDTO;
+import com.seaxll.community.exception.CommunityException;
+import com.seaxll.community.exception.ErrorCode;
 import com.seaxll.community.mapper.QuestionMapper;
 import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.Question;
@@ -94,6 +96,9 @@ public class QuestionService {
      */
     public QuestionDTO getQuestionById(Integer questionId) {
         Question question = questionMapper.findQuestionById(questionId);
+        if (question == null) {
+            throw new CommunityException(ErrorCode.QUESTION_NOT_FOUND);
+        }
         User user = userMapper.findUserById(question.getCreatorId());
         return new QuestionDTO(question, user);
     }
