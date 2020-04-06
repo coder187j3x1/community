@@ -70,6 +70,12 @@ public class QuestionService {
         return pagination;
     }
 
+    /**
+     * 验证 页码 page 的值是否正确
+     * @param page 页码值
+     * @param totalPage 总页数
+     * @return 页码值
+     */
     private Integer verifyPage(Integer page, Integer totalPage) {
         page = (0 < page && page < totalPage)
                 ? page
@@ -77,4 +83,15 @@ public class QuestionService {
         return page;
     }
 
+    /**
+     * 通过 questionID 从数据库中查找 question 与 user 并封装成一个 QuestionDTO
+     *
+     * @param questionId 问题id
+     * @return questionDTO
+     */
+    public QuestionDTO findQuestionById(Integer questionId) {
+        Question question = questionMapper.findQuestionById(questionId);
+        User user = userMapper.findUserById(question.getCreatorId());
+        return new QuestionDTO(question, user);
+    }
 }

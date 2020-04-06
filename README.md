@@ -42,6 +42,10 @@
 - 控制层
 - 服务层
 
+### 分页显示
+- thymeleaf
+    - 前端 th:each
+    - 后端 model 携带参数
 
 ### 资料
 [Github OAuth](https://developer.github.com/apps/building-github-apps/)

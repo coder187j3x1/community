@@ -22,7 +22,7 @@
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading">
-                        <a th:href="@{'/questions/'+ ${0}}" th:text="${questions.title}"></a>
+                        <a th:href="@{'/question/'+ ${questions.id}}" th:text="${questions.title}"></a>
                     </h4>
                     <span class="text-desc">
                         <span th:text="${questions.commentCount}"></span> 个回复 •
