@@ -46,5 +46,24 @@ public class UserProvider {
         }
     }
 
+    /**
+     *
+     * @param user user
+     * @param other otherUser
+     * @return
+     */
+    public boolean isUserEquals(User user, User other) {
+        if (!user.getAvatarUrl().equals(other.getAvatarUrl())) {
+            return false;
+        }
+        if (!user.getName().equals(other.getName())) {
+            return false;
+        }
+        if (!user.getAccountId().equals(other.getAccountId())) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

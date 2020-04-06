@@ -1,10 +1,7 @@
 package com.seaxll.community.mapper;
 
 import com.seaxll.community.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,4 +23,10 @@ public interface UserMapper {
 
     @Select("SELECT * FROM USER WHERE ID = #{id}")
     User findUserById(@Param("id") Integer id);
+
+    @Select("SELECT * FROM USER WHERE ACCOUNT_ID = #{id}")
+    User findUserByAccountId(@Param("id") long id);
+
+    @Update("UPDATE USER SET NAME = #{name}, TOKEN = #{token}, GMT_MODIFY = #{gmtModify}, AVATAR_URL = #{avatarUrl}")
+    void updateUser(User user);
 }

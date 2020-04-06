@@ -77,9 +77,9 @@ public class QuestionService {
      * @return 页码值
      */
     private Integer verifyPage(Integer page, Integer totalPage) {
-        page = (0 < page && page < totalPage)
-                ? page
-                : (page < 0 ? 1 : totalPage);
+        page = totalPage == 0 ? 1
+                : (0 < page && page < totalPage) ? page
+                        : (page >= totalPage ? totalPage : 1);
         return page;
     }
 
