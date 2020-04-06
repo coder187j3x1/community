@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * Description:
  * date: 2020/4/4 16:27
  *
- * @author 张海洋
+ * @author seaxll
  * @since JDK 1.8
  */
 @Controller
@@ -67,4 +68,11 @@ public class PublishController {
         questionMapper.insertQuestion(question);
         return "redirect:/";
     }
+
+    @GetMapping("/publish/{id}")
+    public String publish(@PathVariable(name = "id") Integer id, Model model) {
+
+        return "publish";
+    }
+
 }

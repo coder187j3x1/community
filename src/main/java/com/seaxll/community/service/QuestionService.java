@@ -27,35 +27,38 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
+    /**
+     * 查询 用户的question 并封装成PaginationDTO
+     *
+     * @param page  页数
+     * @param size  每一页的个数
+     * @return PaginationDTO
+     */
     public PaginationDTO getQuestionList(Integer page, Integer size) {
-        Integer count = questionMapper.count();
-        Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
-        page = verifyPage(page, totalPage);
-        // 分页查询的起始地址
-        Integer offset = size * (page - 1);
-        List<Question> questionList = questionMapper.list(offset, size);
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-        PaginationDTO pagination = new PaginationDTO();
-        questionList.forEach(question -> {
-            QuestionDTO questionDTO = new QuestionDTO(question);
-            User user = userMapper.findUserById(question.getCreatorId());
-            questionDTO.setUser(user);
-            questionDTOList.add(questionDTO);
-        });
-        pagination.setQuestions(questionDTOList);
-
-        pagination.setPagination(totalPage, page);
-        return pagination;
+        return getQuestionList(null, page, size);
     }
 
-    public PaginationDTO list(Integer id, Integer page, Integer size) {
+    /**
+     * 查询 用户的question 并封装成PaginationDTO
+     *
+     * @param id    用户 id；为空代表查询所有用户
+     * @param page  页数
+     * @param size  每一页的个数
+     * @return PaginationDTO
+     */
+    public PaginationDTO getQuestionList(Integer id, Integer page, Integer size) {
         Integer count = questionMapper.countByCreateId(id);
         Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
 
         page = verifyPage(page, totalPage);
         // 分页查询的起始地址
         Integer offset = size * (page - 1);
-        List<Question> questionList = questionMapper.findQuestionByCreateId(id, offset, size);
+        List<Question> questionList;
+        if (id == null) {
+            questionList = questionMapper.list(offset, size);
+        } else {
+            questionList = questionMapper.findQuestionByCreateId(id, offset, size);
+        }
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO pagination = new PaginationDTO();
         questionList.forEach(question -> {
