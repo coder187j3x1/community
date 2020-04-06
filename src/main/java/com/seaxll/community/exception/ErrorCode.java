@@ -9,7 +9,8 @@ package com.seaxll.community.exception;
  * @since JDK 1.8
  */
 public enum ErrorCode {
-    QUESTION_NOT_FOUND(1, "您访问的问题不存在！！！");
+    QUESTION_NOT_FOUND(1, "您访问的问题不存在！！！"),
+    USER_NOT_FOUND(2, "该用户不存在！！！");
 
     private int code;
     private String message;

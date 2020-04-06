@@ -49,26 +49,43 @@ public class QuestionService {
      * @return PaginationDTO
      */
     public PaginationDTO getQuestionList(Integer id, Integer page, Integer size) {
-        Integer count = questionMapper.countByCreateId(id);
+        // id 为空则计算总问题数，id 不为空 则计算 用户的总数
+        Integer count;
+        // count = (id == null) ? questionMapper.count() : questionMapper.countByCreateId(id);
+        User user = null;
+        if (id == null) {
+            count = questionMapper.count();
+        } else {
+            user = userMapper.findUserById(id);
+            if (user == null) {
+                throw new CommunityException(ErrorCode.USER_NOT_FOUND);
+            }
+            count = questionMapper.countByCreateId(id);
+        }
+
+        // 计算总页数
         Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
 
         page = verifyPage(page, totalPage);
         // 分页查询的起始地址
         Integer offset = size * (page - 1);
-        List<Question> questionList;
-        if (id == null) {
-            questionList = questionMapper.list(offset, size);
-        } else {
-            questionList = questionMapper.findQuestionByCreateId(id, offset, size);
-        }
+        // 查询 question list
+        List<Question> questionList = (id == null)
+                ? questionMapper.list(offset, size)
+                : questionMapper.findQuestionByCreateId(id, offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO pagination = new PaginationDTO();
-        questionList.forEach(question -> {
+        // 构造 QuestionDTO
+        for (Question question : questionList) {
             QuestionDTO questionDTO = new QuestionDTO(question);
-            User user = userMapper.findUserById(question.getCreatorId());
+            // 判断 id，减少查找次数
+            user = (id != null) ? user : userMapper.findUserById(question.getCreatorId());
+            if (user == null) {
+                throw new CommunityException(ErrorCode.USER_NOT_FOUND);
+            }
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
-        });
+        }
         pagination.setQuestions(questionDTOList);
 
         pagination.setPagination(totalPage, page);
@@ -100,6 +117,9 @@ public class QuestionService {
             throw new CommunityException(ErrorCode.QUESTION_NOT_FOUND);
         }
         User user = userMapper.findUserById(question.getCreatorId());
+        if (user == null) {
+            throw new CommunityException(ErrorCode.USER_NOT_FOUND);
+        }
         return new QuestionDTO(question, user);
     }
 
