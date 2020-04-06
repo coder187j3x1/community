@@ -92,9 +92,22 @@ public class QuestionService {
      * @param questionId 问题id
      * @return questionDTO
      */
-    public QuestionDTO findQuestionById(Integer questionId) {
+    public QuestionDTO getQuestionById(Integer questionId) {
         Question question = questionMapper.findQuestionById(questionId);
         User user = userMapper.findUserById(question.getCreatorId());
         return new QuestionDTO(question, user);
+    }
+
+    /**
+     *  更新 question 如果没有，就插入一条 question 记录
+     * @param question question
+     */
+    public void updateOrInsert(Question question) {
+        if (question.getId() != null) {
+            // TODO: 这里可以处理一下 question.id 在数据库中 不存在的异常
+            questionMapper.updateQuestion(question);
+        } else {
+            questionMapper.insertQuestion(question);
+        }
     }
 }

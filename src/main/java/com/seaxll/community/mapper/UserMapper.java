@@ -27,6 +27,6 @@ public interface UserMapper {
     @Select("SELECT * FROM USER WHERE ACCOUNT_ID = #{id}")
     User findUserByAccountId(@Param("id") long id);
 
-    @Update("UPDATE USER SET NAME = #{name}, TOKEN = #{token}, GMT_MODIFY = #{gmtModify}, AVATAR_URL = #{avatarUrl}")
+    @Update("UPDATE USER SET NAME = #{name}, TOKEN = #{token}, GMT_MODIFY = #{gmtModify}, AVATAR_URL = #{avatarUrl} WHERE id = #{id}")
     void updateUser(User user);
 }

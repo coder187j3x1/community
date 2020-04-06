@@ -1,8 +1,9 @@
 package com.seaxll.community.cotroller;
 
-import com.seaxll.community.mapper.QuestionMapper;
+import com.seaxll.community.dto.QuestionDTO;
 import com.seaxll.community.model.Question;
 import com.seaxll.community.model.User;
+import com.seaxll.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
 
     @GetMapping("/publish")
     public String publish() {
@@ -37,8 +38,8 @@ public class PublishController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "tag", required = false) String tag,
-            HttpServletRequest request,
-            Model model) {
+            @RequestParam(value = "id", required = false) Integer id,
+            HttpServletRequest request, Model model) {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
@@ -63,15 +64,21 @@ public class PublishController {
             model.addAttribute("error", "用户未登录");
             return "publish";
         }
-
+        if (id != null) {
+            question.setId(id);
+        }
         question.setCreatorId(user.getId());
-        questionMapper.insertQuestion(question);
+        questionService.updateOrInsert(question);
         return "redirect:/";
     }
 
-    @GetMapping("/publish/{id}")
+    @GetMapping("/edit/{id}")
     public String publish(@PathVariable(name = "id") Integer id, Model model) {
-
+        QuestionDTO question = questionService.getQuestionById(id);
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        model.addAttribute("id", question.getId());
         return "publish";
     }
 

@@ -1,10 +1,7 @@
 package com.seaxll.community.mapper;
 
 import com.seaxll.community.model.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,4 +37,7 @@ public interface QuestionMapper {
 
     @Select("SELECT * FROM QUESTION WHERE ID = #{id}")
     Question findQuestionById(@Param("id") Integer id);
+
+    @Update("UPDATE QUESTION SET TITLE = #{title}, DESCRIPTION = #{description}, GMT_MODIFY = #{gmtModify}, TAG = #{tag} WHERE id = #{id}")
+    void updateQuestion(Question question);
 }

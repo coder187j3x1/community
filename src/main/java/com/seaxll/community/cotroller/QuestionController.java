@@ -30,7 +30,7 @@ public class QuestionController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        QuestionDTO questionDTO = questionService.findQuestionById(questionId);
+        QuestionDTO questionDTO = questionService.getQuestionById(questionId);
         model.addAttribute("question", questionDTO);
         return "question";
     }
