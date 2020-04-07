@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface CommentMapper {
-    @Insert("INSERT INTO COMMENT VALUES(PARENT_ID, TYPE, COMMENTATOR_ID, GMT_CREATE, GMT_MODIFY, LIKE_COUNT, CONTENT, COMMENT_COUNT) " +
+    @Insert("INSERT INTO COMMENT (PARENT_ID, TYPE, COMMENTATOR_ID, GMT_CREATE, GMT_MODIFY, LIKE_COUNT, CONTENT, COMMENT_COUNT) " +
             "VALUES(#{parentId}, #{type}, #{commentatorId}, #{gmtCreate}, #{gmtModified}, #{likeCount}, #{content}, #{commentCount})")
     void insertComment(Comment comment);
 }
