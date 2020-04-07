@@ -143,6 +143,7 @@ public class QuestionService {
      * @param viewCount 访问量
      */
     public void addViewCount(Integer questionId, Integer viewCount) {
+        // TODO： 解决 刷新之后时间更改问题
         questionMapper.updateQuestionViewCount(questionId, viewCount);
     }
 }
