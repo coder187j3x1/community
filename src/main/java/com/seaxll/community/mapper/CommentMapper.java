@@ -27,9 +27,9 @@ public interface CommentMapper {
     @Update("UPDATE COMMENT SET COMMENT_COUNT = #{commentCount} WHERE ID = #{id}")
     void updateCommentCount(Comment comment);
 
-    @Select("SELECT * FROM COMMENT WHERE parentId = #{questionId} and type = 0")
+    @Select("SELECT * FROM COMMENT WHERE PARENT_ID = #{questionId} AND TYPE = 0")
     List<Comment> findAllCommentByQuestionId(@Param("questionId") Integer questionId);
 
-    @Select("SELECT * FROM COMMENT WHERE parentId = #{id} and type = 1")
+    @Select("SELECT * FROM COMMENT WHERE PARENT_ID = #{id} AND TYPE = 1")
     List<Comment> findChildCommentByCommentId(Integer id);
 }
