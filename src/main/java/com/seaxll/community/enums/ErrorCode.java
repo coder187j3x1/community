@@ -1,4 +1,4 @@
-package com.seaxll.community.exception;
+package com.seaxll.community.enums;
 
 /**
  * ClassName: ErrorCode
@@ -12,7 +12,10 @@ public enum ErrorCode {
     QUESTION_NOT_FOUND(1, "您访问的问题不存在"),
     USER_NOT_FOUND(2, "该用户不存在"),
     PLEASE_LOGIN(3, "请登录后操作"),
-    COMMENT_IS_EMPTY(4, "评论为空");
+    COMMENT_IS_EMPTY(4, "评论为空"),
+    COMMENT_TYPE_NOT_FOUND(5, "评论类型不存在"),
+    COMMENT_NOT_FOUND(6, "评论不存在"),
+    ;
     
     private int code;
     private String message;
@@ -45,4 +48,5 @@ public enum ErrorCode {
         this.code = code;
         this.message = message;
     }
+
 }
