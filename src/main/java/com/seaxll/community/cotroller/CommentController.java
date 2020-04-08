@@ -1,10 +1,14 @@
 package com.seaxll.community.cotroller;
 
 import com.seaxll.community.dto.CommentDTO;
-import com.seaxll.community.mapper.CommentMapper;
+import com.seaxll.community.dto.ResultDTO;
+import com.seaxll.community.exception.ErrorCode;
 import com.seaxll.community.model.Comment;
+import com.seaxll.community.model.User;
+import com.seaxll.community.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,23 +28,35 @@ import java.sql.Timestamp;
 public class CommentController {
 
     @Autowired
-    private CommentMapper commentMapper;
+    private CommentService commentService;
 
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object post(@RequestBody(required = false) CommentDTO commentDTO,
                        HttpServletRequest request) {
+        // 验证user
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            return ResultDTO.errorOf(ErrorCode.PLEASE_LOGIN);
+        }
+
+        // 验证评论
+        if (commentDTO == null || StringUtils.isEmpty(commentDTO.getContent())){
+            return ResultDTO.errorOf(ErrorCode.COMMENT_IS_EMPTY);
+        }
+
         Comment comment = new Comment();
         comment.setParentId(commentDTO.getParentID());
         comment.setContent(commentDTO.getContent());
         comment.setType(commentDTO.getType());
         comment.setGmtCreate(new Timestamp(System.currentTimeMillis()));
         comment.setGmtModified(comment.getGmtCreate());
-        // User user = (User) request.getSession().getAttribute("user");
-        // comment.setCommentatorId(user.getId());
+        comment.setCommentatorId(user.getId());
         comment.setCommentatorId(1);
         comment.setLikeCount(0);
         comment.setCommentCount(0);
-        commentMapper.insertComment(comment);
-        return null;
+        
+        commentService.insertComment(comment);
+
+        return ResultDTO.okOf();
     }
 }
