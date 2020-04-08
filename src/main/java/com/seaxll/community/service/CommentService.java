@@ -33,7 +33,6 @@ public class CommentService {
             throw new CommunityException(ErrorCode.COMMENT_TYPE_NOT_FOUND);
         }
         if (comment.getType().equals(CommentType.COMMENT.getType())) {
-            // TODO： 回复评论
             // 1.判断回复的评论是否存在
             Comment parentComment = commentMapper.findCommentById(comment.getParentId());
             if (parentComment == null) {
@@ -46,7 +45,6 @@ public class CommentService {
             parentComment.setCommentCount(parentComment.getCommentCount() + 1);
             commentMapper.updateCommentCount(parentComment);
         } else {
-            // TODO：回答问题
             // 1.判断回答的问题是否存在
             Question question = questionMapper.findQuestionById(comment.getParentId());
             if (question == null) {

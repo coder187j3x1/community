@@ -1,18 +1,25 @@
 package com.seaxll.community.service;
 
+import com.seaxll.community.dto.CommentDTO;
 import com.seaxll.community.dto.PaginationDTO;
 import com.seaxll.community.dto.QuestionDTO;
 import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.exception.CommunityException;
+import com.seaxll.community.mapper.CommentMapper;
 import com.seaxll.community.mapper.QuestionMapper;
 import com.seaxll.community.mapper.UserMapper;
+import com.seaxll.community.model.Comment;
 import com.seaxll.community.model.Question;
 import com.seaxll.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * ClassName: QuestionService
@@ -28,6 +35,8 @@ public class QuestionService {
     private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private CommentMapper commentMapper;
 
     /**
      * 查询 用户的question 并封装成PaginationDTO
@@ -145,5 +154,60 @@ public class QuestionService {
     public void addViewCount(Integer questionId, Integer viewCount) {
         // TODO： 解决 刷新之后时间更改问题
         questionMapper.updateQuestionViewCount(questionId, viewCount);
+    }
+
+    /**
+     * 根据问题 id 查询评论列表，并构造为 List<CommentDTO>
+     *
+     * @param id 问题 id
+     * @return List<CommentDTO>
+     */
+    public List<CommentDTO> findCommentById(Integer id) {
+        List<Comment> commentList = commentMapper.findAllCommentByQuestionId(id);
+        List<CommentDTO> commentDTOList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            if (StringUtils.isEmpty(comment.getContent())) {
+                throw new CommunityException(ErrorCode.COMMENT_IS_EMPTY);
+            }
+            User user = userMapper.findUserById(comment.getCommentatorId());
+            CommentDTO commentDTO = new CommentDTO(comment, user);
+            if (user == null) {
+                throw new CommunityException(ErrorCode.USER_NOT_FOUND);
+            }
+            List<CommentDTO> childComments = findChildCommentsById(commentDTO.getId());
+            // 给 childComments 按时间排序
+            childComments = childComments.stream().sorted(Comparator.comparing(CommentDTO::getGmtCreate)).collect(Collectors.toList());
+            commentDTO.setChildComment(childComments);
+            commentDTOList.add(commentDTO);
+        }
+        return commentDTOList;
+    }
+
+    /**
+     * 根据评论 id 查询二级评论（回复）， 递归
+     *
+     * @param id 评论的id
+     * @return  commentDTO
+     */
+    private List<CommentDTO> findChildCommentsById(Integer id) {
+        List<Comment> comments = commentMapper.findChildCommentByCommentId(id);
+        List<CommentDTO> commentDTOList = new ArrayList<>();
+        for (Comment comment : comments) {
+            if (StringUtils.isEmpty(comment.getContent())) {
+                throw new CommunityException(ErrorCode.COMMENT_IS_EMPTY);
+            }
+            User user = userMapper.findUserById(comment.getCommentatorId());
+            if (user == null) {
+                throw new CommunityException(ErrorCode.USER_NOT_FOUND);
+            }
+            // 这里暂时只不为 commentDTO 添加 childComment ，只查询 回复
+            CommentDTO commentDTO = new CommentDTO(comment, user);
+            commentDTOList.add(commentDTO);
+            // 回复
+            if (commentDTO.getCommentCount() > 0) {
+                commentDTOList.addAll(Objects.requireNonNull(findChildCommentsById(commentDTO.getId())));
+            }
+        }
+        return commentDTOList;
     }
 }

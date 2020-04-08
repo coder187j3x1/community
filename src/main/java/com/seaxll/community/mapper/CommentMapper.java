@@ -4,6 +4,8 @@ import com.seaxll.community.model.Comment;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * ClassName: CommentMapper
  * Description:
@@ -24,4 +26,10 @@ public interface CommentMapper {
 
     @Update("UPDATE COMMENT SET COMMENT_COUNT = #{commentCount} WHERE ID = #{id}")
     void updateCommentCount(Comment comment);
+
+    @Select("SELECT * FROM COMMENT WHERE parentId = #{questionId} and type = 0")
+    List<Comment> findAllCommentByQuestionId(@Param("questionId") Integer questionId);
+
+    @Select("SELECT * FROM COMMENT WHERE parentId = #{id} and type = 1")
+    List<Comment> findChildCommentByCommentId(Integer id);
 }
