@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 public class CommentDTO {
-    private Long parentID;
+    private Integer parentID;
     private String content;
     private Integer type;
 }

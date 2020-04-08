@@ -2,7 +2,7 @@ package com.seaxll.community.cotroller;
 
 import com.seaxll.community.dto.CommentDTO;
 import com.seaxll.community.dto.ResultDTO;
-import com.seaxll.community.exception.ErrorCode;
+import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.model.Comment;
 import com.seaxll.community.model.User;
 import com.seaxll.community.service.CommentService;

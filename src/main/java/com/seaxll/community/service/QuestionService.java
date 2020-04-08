@@ -2,8 +2,8 @@ package com.seaxll.community.service;
 
 import com.seaxll.community.dto.PaginationDTO;
 import com.seaxll.community.dto.QuestionDTO;
+import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.exception.CommunityException;
-import com.seaxll.community.exception.ErrorCode;
 import com.seaxll.community.mapper.QuestionMapper;
 import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.Question;

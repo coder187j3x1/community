@@ -1,7 +1,7 @@
 package com.seaxll.community.dto;
 
+import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.exception.CommunityException;
-import com.seaxll.community.exception.ErrorCode;
 import lombok.Data;
 
 /**

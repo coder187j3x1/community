@@ -1,5 +1,7 @@
 package com.seaxll.community.exception;
 
+import com.seaxll.community.enums.ErrorCode;
+
 /**
  * ClassName: CommunityException
  * Description:
