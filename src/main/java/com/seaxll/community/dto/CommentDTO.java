@@ -32,6 +32,13 @@ public class CommentDTO {
     // 回复列表
     private List<CommentDTO> childComment;
 
+    // 增加一个无参构造，以便 @RequestBody 可以构造此实例
+    public CommentDTO() {
+
+    }
+
+    /********************************** Constructor with Comment  **************************************/
+
     public CommentDTO(Comment comment) {
         this(comment, null, null);
     }
