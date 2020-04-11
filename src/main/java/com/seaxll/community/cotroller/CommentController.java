@@ -2,7 +2,6 @@ package com.seaxll.community.cotroller;
 
 import com.seaxll.community.dto.CommentDTO;
 import com.seaxll.community.dto.ResultDTO;
-import com.seaxll.community.enums.CommentType;
 import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.model.Comment;
 import com.seaxll.community.model.User;
@@ -70,7 +69,7 @@ public class CommentController {
     @ResponseBody
     @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
     public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Integer id) {
-        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentType.COMMENT);
+        List<CommentDTO> commentDTOS = commentService.findChildCommentsById(id);
         return ResultDTO.okOf(commentDTOS);
     }
 }
