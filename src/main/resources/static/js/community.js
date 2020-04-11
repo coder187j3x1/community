@@ -1,11 +1,20 @@
 /**
- * 提交回复
+ * 提交评论
  */
 function post() {
     var questionId = $("#question_id").val();
     var content = $("#comment_content").val();
     // Todo：获取 评论类型 type
     comment2target(questionId, 0, content);
+}
+
+/**
+ * 回复评论
+ */
+function comment(e) {
+    var commentId = e.getAttribute("data-id");
+    var content = $("#input-" + commentId).val();
+    comment2target(commentId, 1, content);
 }
 
 function comment2target(targetId, type, content) {
