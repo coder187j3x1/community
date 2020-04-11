@@ -35,6 +35,9 @@ public class CommentController {
     private CommentService commentService;
 
     // 加上@ResponseBody  将java对象转为json格式的数据
+    /**
+     * 评论
+     */
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object post(@RequestBody(required = false) CommentDTO commentDTO,
@@ -57,7 +60,6 @@ public class CommentController {
         comment.setGmtCreate(new Timestamp(System.currentTimeMillis()));
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentatorId(user.getId());
-        comment.setCommentatorId(1);
         comment.setLikeCount(0);
         comment.setCommentCount(0);
         
@@ -66,6 +68,9 @@ public class CommentController {
         return ResultDTO.okOf();
     }
 
+    /**
+     * 二级评论
+     */
     @ResponseBody
     @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
     public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Integer id) {
