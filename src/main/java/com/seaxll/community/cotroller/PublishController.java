@@ -42,7 +42,7 @@ public class PublishController {
             HttpServletRequest request, Model model) {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
-        model.addAttribute("tag", tag);
+        model.addAttribute("tag", tag.replaceAll(",", "|"));
         if ("".equals(title)) {
             model.addAttribute("error", "标题不能为空");
             return "publish";

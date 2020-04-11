@@ -41,7 +41,9 @@ public class QuestionController {
         if (questionDTO.getCommentCount() > 0) {
             commentDTOs = questionService.findCommentById(Integer.parseInt(id));
         }
+        List<QuestionDTO> relatedQuestions = questionService.findRelateQuestionByTag(questionDTO);
         model.addAttribute("comments", commentDTOs);
+        model.addAttribute("relatedQuestions", relatedQuestions);
         return "question";
     }
 }

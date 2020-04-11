@@ -184,4 +184,17 @@ public class QuestionService {
         return commentDTOList;
     }
 
+    /**
+     * 查找相关问题
+     * @param questionDTO
+     *      QuestionDTO
+     * @return
+     *      List<QuestionDTO>
+     */
+    public List<QuestionDTO> findRelateQuestionByTag(QuestionDTO questionDTO) {
+        List<QuestionDTO> relatedQuestions = new ArrayList<>();
+        List<Question> questions = questionMapper.selectRelateQuestionByTag(questionDTO);
+        questions.forEach(question -> relatedQuestions.add(new QuestionDTO(question)));
+        return relatedQuestions;
+    }
 }

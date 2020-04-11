@@ -1,5 +1,6 @@
 package com.seaxll.community.mapper;
 
+import com.seaxll.community.dto.QuestionDTO;
 import com.seaxll.community.model.Question;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -46,4 +47,7 @@ public interface QuestionMapper {
 
     @Update("UPDATE QUESTION SET COMMENT_COUNT = #{commentCount} WHERE id = #{id}")
     void updateCommentCount(Question question);
+
+    @Select("SELECT * FROM QUESTION WHERE ID != #{id} AND TAG REGEXP #{tag}")
+    List<Question> selectRelateQuestionByTag(QuestionDTO questionDTO);
 }
