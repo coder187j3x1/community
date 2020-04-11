@@ -9,6 +9,7 @@ import com.seaxll.community.model.Comment;
 import com.seaxll.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * ClassName: CommentService
@@ -27,6 +28,7 @@ public class CommentService {
     @Autowired
     private QuestionMapper questionMapper;
 
+    @Transactional
     public void insertComment(Comment comment) {
         boolean typeExist = CommentType.isCommentTypeExist(comment.getType());
         if (!typeExist) {
