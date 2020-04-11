@@ -19,6 +19,11 @@ import java.util.List;
 /**
  * ClassName: CommentController
  * Description:
+ *  前端 ajax 请求时 contentType:'application/json', dataType: "json", type: "POST", 的
+ *      json 格式（contentType）参数，返回 json（dataType） 格式 的 post（type）请求
+ *  服务器需要返回一个 json 数据类型 ，使用 @RequestMapping映射请求路径，并且需要在处理的方法上加上 @ResponseBody
+ *      @RequestMapping 处理 get 或 post 请求；@GetMapping 只能处理 get 请求
+ *      @ResponseBody 将返回的 java 对象转为 json 格式的数据
  * date: 2020/4/6 22:20
  *
  * @author seaxll
