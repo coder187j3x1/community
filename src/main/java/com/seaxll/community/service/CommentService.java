@@ -57,6 +57,5 @@ public class CommentService {
             question.setCommentCount(question.getCommentCount() + 1);
             questionMapper.updateCommentCount(question);
         }
-        commentMapper.insertComment(comment);
     }
 }
