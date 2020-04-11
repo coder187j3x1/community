@@ -31,6 +31,8 @@ public class CommentDTO {
     private User user;
     // 回复列表
     private List<CommentDTO> childComment;
+    // 回复的人
+    private User parentUser;
 
     // 增加一个无参构造，以便 @RequestBody 可以构造此实例
     public CommentDTO() {
@@ -40,14 +42,14 @@ public class CommentDTO {
     /********************************** Constructor with Comment  **************************************/
 
     public CommentDTO(Comment comment) {
-        this(comment, null, null);
+        this(comment, null, null, null);
     }
 
     public CommentDTO(Comment comment, User user) {
-        this(comment, user, null);
+        this(comment, user, null, null);
     }
 
-    public CommentDTO(Comment comment, User user, List<CommentDTO> childComment) {
+    public CommentDTO(Comment comment, User user, List<CommentDTO> childComment, User parent) {
         if (comment != null) {
             this.id = comment.getId();
             this.content = comment.getContent();
@@ -61,5 +63,6 @@ public class CommentDTO {
         }
         this.user = user;
         this.childComment = childComment != null ? childComment : new ArrayList<>();
+        this.parentUser = parent;
     }
 }

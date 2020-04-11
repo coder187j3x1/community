@@ -91,6 +91,8 @@ public class CommentService {
             }
             // 这里暂时只不为 commentDTO 添加 childComment ，只查询 回复
             CommentDTO commentDTO = new CommentDTO(comment, user);
+            // 回复的谁？
+            commentDTO.setParentUser(userMapper.findUserById(commentDTO.getParentId()));
             commentDTOList.add(commentDTO);
             // 回复
             if (commentDTO.getCommentCount() > 0) {

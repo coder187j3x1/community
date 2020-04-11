@@ -93,7 +93,7 @@ function collapseComments(e) {
                         "class": "media-body"
                     }).append($("<h5/>", {
                         "class": "media-heading",
-                        "html": comment.user.name
+                        "html": comment.user.name /*+ " @ " + comment.parentUser.name*/ // @ 评论的人
                     })).append($("<div/>", {
                         "html": comment.content
                     })).append($("<div/>", {
