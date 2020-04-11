@@ -4,7 +4,7 @@
 function post() {
     var questionId = $("#question_id").val();
     var content = $("#comment_content").val();
-    comment2target(questionId, 1, content);
+    comment2target(questionId, 0, content);
 }
 
 function comment2target(targetId, type, content) {

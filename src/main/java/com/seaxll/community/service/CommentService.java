@@ -1,5 +1,6 @@
 package com.seaxll.community.service;
 
+import com.seaxll.community.dto.CommentDTO;
 import com.seaxll.community.enums.CommentType;
 import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.exception.CommunityException;
@@ -10,6 +11,8 @@ import com.seaxll.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * ClassName: CommentService
@@ -59,5 +62,10 @@ public class CommentService {
             question.setCommentCount(question.getCommentCount() + 1);
             questionMapper.updateCommentCount(question);
         }
+    }
+
+    public List<CommentDTO> listByTargetId(Integer id, CommentType comment) {
+
+        return null;
     }
 }

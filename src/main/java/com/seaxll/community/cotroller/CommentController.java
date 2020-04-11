@@ -2,6 +2,7 @@ package com.seaxll.community.cotroller;
 
 import com.seaxll.community.dto.CommentDTO;
 import com.seaxll.community.dto.ResultDTO;
+import com.seaxll.community.enums.CommentType;
 import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.model.Comment;
 import com.seaxll.community.model.User;
@@ -9,12 +10,11 @@ import com.seaxll.community.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * ClassName: CommentController
@@ -30,6 +30,8 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    // 加上@ResponseBody  将java对象转为json格式的数据
+    @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object post(@RequestBody(required = false) CommentDTO commentDTO,
                        HttpServletRequest request) {
@@ -58,5 +60,12 @@ public class CommentController {
         commentService.insertComment(comment);
 
         return ResultDTO.okOf();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Integer id) {
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentType.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
     }
 }
