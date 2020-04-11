@@ -9,12 +9,12 @@ package com.seaxll.community.enums;
  * @since JDK 1.8
  */
 public enum ErrorCode {
-    QUESTION_NOT_FOUND(1, "您访问的问题不存在"),
-    USER_NOT_FOUND(2, "该用户不存在"),
-    PLEASE_LOGIN(3, "请登录后操作"),
-    COMMENT_IS_EMPTY(4, "评论为空"),
-    COMMENT_TYPE_NOT_FOUND(5, "评论类型不存在"),
-    COMMENT_NOT_FOUND(6, "评论不存在"),
+    QUESTION_NOT_FOUND(2001, "您访问的问题不存在"),
+    USER_NOT_FOUND(2002, "该用户不存在"),
+    PLEASE_LOGIN(2003, "请登录后操作"),
+    COMMENT_IS_EMPTY(2004, "评论为空"),
+    COMMENT_TYPE_NOT_FOUND(2005, "评论类型不存在"),
+    COMMENT_NOT_FOUND(2006, "评论不存在"),
     ;
     
     private int code;
