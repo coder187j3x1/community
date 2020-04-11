@@ -6,13 +6,18 @@ import com.seaxll.community.enums.ErrorCode;
 import com.seaxll.community.exception.CommunityException;
 import com.seaxll.community.mapper.CommentMapper;
 import com.seaxll.community.mapper.QuestionMapper;
+import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.Comment;
 import com.seaxll.community.model.Question;
+import com.seaxll.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ClassName: CommentService
@@ -30,6 +35,9 @@ public class CommentService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Transactional
     public void insertComment(Comment comment) {
@@ -64,8 +72,31 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> listByTargetId(Integer id, CommentType comment) {
-
-        return null;
+    /**
+     * 根据评论 id 查询二级评论（回复）， 递归
+     *
+     * @param id 评论的id
+     * @return  commentDTO
+     */
+    public List<CommentDTO> findChildCommentsById(Integer id) {
+        List<Comment> comments = commentMapper.findChildCommentByCommentId(id);
+        List<CommentDTO> commentDTOList = new ArrayList<>();
+        for (Comment comment : comments) {
+            if (StringUtils.isEmpty(comment.getContent())) {
+                throw new CommunityException(ErrorCode.COMMENT_IS_EMPTY);
+            }
+            User user = userMapper.findUserById(comment.getCommentatorId());
+            if (user == null) {
+                throw new CommunityException(ErrorCode.USER_NOT_FOUND);
+            }
+            // 这里暂时只不为 commentDTO 添加 childComment ，只查询 回复
+            CommentDTO commentDTO = new CommentDTO(comment, user);
+            commentDTOList.add(commentDTO);
+            // 回复
+            if (commentDTO.getCommentCount() > 0) {
+                commentDTOList.addAll(Objects.requireNonNull(findChildCommentsById(commentDTO.getId())));
+            }
+        }
+        return commentDTOList;
     }
 }

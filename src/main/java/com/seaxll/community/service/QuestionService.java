@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +36,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 查询 用户的question 并封装成PaginationDTO
@@ -174,7 +175,7 @@ public class QuestionService {
             if (user == null) {
                 throw new CommunityException(ErrorCode.USER_NOT_FOUND);
             }
-            List<CommentDTO> childComments = findChildCommentsById(commentDTO.getId());
+            List<CommentDTO> childComments = commentService.findChildCommentsById(commentDTO.getId());
             // 给 childComments 按时间排序
             childComments = childComments.stream().sorted(Comparator.comparing(CommentDTO::getGmtCreate)).collect(Collectors.toList());
             commentDTO.setChildComment(childComments);
@@ -183,31 +184,4 @@ public class QuestionService {
         return commentDTOList;
     }
 
-    /**
-     * 根据评论 id 查询二级评论（回复）， 递归
-     *
-     * @param id 评论的id
-     * @return  commentDTO
-     */
-    private List<CommentDTO> findChildCommentsById(Integer id) {
-        List<Comment> comments = commentMapper.findChildCommentByCommentId(id);
-        List<CommentDTO> commentDTOList = new ArrayList<>();
-        for (Comment comment : comments) {
-            if (StringUtils.isEmpty(comment.getContent())) {
-                throw new CommunityException(ErrorCode.COMMENT_IS_EMPTY);
-            }
-            User user = userMapper.findUserById(comment.getCommentatorId());
-            if (user == null) {
-                throw new CommunityException(ErrorCode.USER_NOT_FOUND);
-            }
-            // 这里暂时只不为 commentDTO 添加 childComment ，只查询 回复
-            CommentDTO commentDTO = new CommentDTO(comment, user);
-            commentDTOList.add(commentDTO);
-            // 回复
-            if (commentDTO.getCommentCount() > 0) {
-                commentDTOList.addAll(Objects.requireNonNull(findChildCommentsById(commentDTO.getId())));
-            }
-        }
-        return commentDTOList;
-    }
 }
