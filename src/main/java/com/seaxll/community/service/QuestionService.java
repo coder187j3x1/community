@@ -47,8 +47,8 @@ public class QuestionService {
      * @param size  每一页的个数
      * @return PaginationDTO
      */
-    public PaginationDTO getQuestionList(Integer page, Integer size) {
-        return getQuestionList(null, page, size);
+    public PaginationDTO findPagination(Integer page, Integer size) {
+        return findPaginationByUserId(null, page, size);
     }
 
     /**
@@ -59,7 +59,7 @@ public class QuestionService {
      * @param size  每一页的个数
      * @return PaginationDTO
      */
-    public PaginationDTO getQuestionList(Integer id, Integer page, Integer size) {
+    public PaginationDTO findPaginationByUserId(Integer id, Integer page, Integer size) {
         // id 为空则计算总问题数，id 不为空 则计算 用户的总数
         Integer count;
         // count = (id == null) ? questionMapper.count() : questionMapper.countByCreateId(id);
@@ -195,15 +195,26 @@ public class QuestionService {
     public List<QuestionDTO> findRelateQuestionByTag(QuestionDTO questionDTO) {
         List<QuestionDTO> relatedQuestions = new ArrayList<>();
         List<Question> questions = questionMapper.selectRelateQuestionByTag(questionDTO);
-        questions.forEach(question -> relatedQuestions.add(new QuestionDTO(question)));
+        questions.forEach(question -> relatedQuestions.add(new QuestionDTO(question, userMapper.findUserById(question.getCreatorId()))));
         return relatedQuestions;
     }
 
-    public PaginationDTO findQuestionByTag(String tag, Integer page, Integer size) {
+    /**
+     * 查找 tag 标签的所有问题
+     * @param tag
+     *      String
+     * @param page
+     *      Integer
+     * @param size
+     *      Integer
+     * @return
+     *      PaginationDTO
+     */
+    public PaginationDTO findPaginationByTag(String tag, Integer page, Integer size) {
 
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         List<Question> questions = questionMapper.selectQuestionByTag(tag.replaceAll(",", "|"));
-        questions.forEach(question -> questionDTOS.add(new QuestionDTO(question)));
+        questions.forEach(question -> questionDTOS.add(new QuestionDTO(question, userMapper.findUserById(question.getCreatorId()))));
 
         PaginationDTO pagination = new PaginationDTO();
         Integer count = questionDTOS.size();
@@ -224,7 +235,7 @@ public class QuestionService {
      * @return
      *      PaginationDTO
      */
-    public PaginationDTO getQuestionListBySearch(String search, Integer page, Integer size) {
+    public PaginationDTO findPaginationBySearch(String search, Integer page, Integer size) {
         if (org.apache.commons.lang3.StringUtils.isNotBlank(search)) {
             String[] tags = StringUtils.split(search, " ");
             search = Arrays

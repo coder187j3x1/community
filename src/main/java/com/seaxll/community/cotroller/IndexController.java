@@ -34,7 +34,7 @@ public class IndexController {
     public String index(HttpServletRequest request, Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size) {
-        PaginationDTO pagination = questionService.getQuestionList(page, size);
+        PaginationDTO pagination = questionService.findPagination(page, size);
         List<String> tags = hotTagCache.getHots();
         model.addAttribute("pagination", pagination);
         model.addAttribute("tags", tags);
@@ -49,9 +49,9 @@ public class IndexController {
                         @RequestParam(name = "search", required = false) String search) {
         PaginationDTO pagination;
         if (search != null && !search.isEmpty()) {
-            pagination = questionService.getQuestionListBySearch(search, page, size);
+            pagination = questionService.findPaginationBySearch(search, page, size);
         } else {
-            pagination = questionService.getQuestionList(page, size);
+            pagination = questionService.findPagination(page, size);
         }
         List<String> tags = hotTagCache.getHots();
         model.addAttribute("pagination", pagination);
@@ -64,7 +64,7 @@ public class IndexController {
                         @RequestParam(name = "tag", required = false) String tag,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size) {
-        PaginationDTO pagination = questionService.findQuestionByTag(tag, page, size);
+        PaginationDTO pagination = questionService.findPaginationByTag(tag, page, size);
         List<String> tags = hotTagCache.getHots();
         model.addAttribute("pagination", pagination);
         model.addAttribute("tags", tags);
