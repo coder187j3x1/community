@@ -2,6 +2,7 @@ package com.seaxll.community.cotroller;
 
 import com.seaxll.community.dto.PaginationDTO;
 import com.seaxll.community.model.User;
+import com.seaxll.community.service.NotificationService;
 import com.seaxll.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,9 @@ public class ProfileController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/profile/{action}")
     public String profile(HttpServletRequest request, Model model,
                           @PathVariable(name = "action", required = false) String action,
@@ -41,11 +45,13 @@ public class ProfileController {
             PaginationDTO paginationDTO = questionService.getQuestionList(user.getId(), page, size);
             model.addAttribute("pagination", paginationDTO);
         } else if ("replies".equals(action)) {
-            // PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            PaginationDTO paginationDTO = notificationService.getNotificationList(user.getId(), page, size);
             model.addAttribute("section", "replies");
-            // model.addAttribute("pagination", paginationDTO);
+            model.addAttribute("pagination", paginationDTO);
             model.addAttribute("sectionName", "最新回复");
         }
         return "profile";
     }
+
+
 }

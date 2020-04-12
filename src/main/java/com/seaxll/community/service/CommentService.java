@@ -3,11 +3,15 @@ package com.seaxll.community.service;
 import com.seaxll.community.dto.CommentDTO;
 import com.seaxll.community.enums.CommentType;
 import com.seaxll.community.enums.ErrorCode;
+import com.seaxll.community.enums.NotificationStatus;
+import com.seaxll.community.enums.NotificationType;
 import com.seaxll.community.exception.CommunityException;
 import com.seaxll.community.mapper.CommentMapper;
+import com.seaxll.community.mapper.NotificationMapper;
 import com.seaxll.community.mapper.QuestionMapper;
 import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.Comment;
+import com.seaxll.community.model.Notification;
 import com.seaxll.community.model.Question;
 import com.seaxll.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,8 +44,11 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     @Transactional
-    public void insertComment(Comment comment) {
+    public void insertComment(Comment comment, User commentator) {
         boolean typeExist = CommentType.isCommentTypeExist(comment.getType());
         if (!typeExist) {
             throw new CommunityException(ErrorCode.COMMENT_TYPE_NOT_FOUND);
@@ -57,6 +65,8 @@ public class CommentService {
             // 3.增加评论的评论数
             parentComment.setCommentCount(parentComment.getCommentCount() + 1);
             commentMapper.updateCommentCount(parentComment);
+            // 创建通知
+            createNotify(comment, comment.getCommentatorId(), commentator.getName(), parentComment.getContent(), NotificationType.REPLY_COMMENT, parentComment.getId());
         } else {
             // 1.判断回答的问题是否存在
             Question question = questionMapper.findQuestionById(comment.getParentId());
@@ -69,6 +79,8 @@ public class CommentService {
             // 3.增加问题评论数
             question.setCommentCount(question.getCommentCount() + 1);
             questionMapper.updateCommentCount(question);
+            // 创建通知
+            createNotify(comment, question.getCreatorId(), commentator.getName(), question.getTitle(), NotificationType.REPLY_QUESTION, question.getId());
         }
     }
 
@@ -100,5 +112,21 @@ public class CommentService {
             }
         }
         return commentDTOList;
+    }
+
+    private void createNotify(Comment comment, Integer receiver, String notifierName, String outerTitle, NotificationType notificationType, Integer outerId) {
+        if (receiver.equals(comment.getCommentatorId())) {
+            return;
+        }
+        Notification notification = new Notification();
+        notification.setGmtCreate(new Timestamp(System.currentTimeMillis()));
+        notification.setType(notificationType.getType());
+        notification.setOuterId(outerId);
+        notification.setNotifierId(comment.getCommentatorId());
+        notification.setStatus(NotificationStatus.UNREAD.getStatus());
+        notification.setReceiverId(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        notificationMapper.insertNotification(notification);
     }
 }

@@ -15,6 +15,8 @@ public enum ErrorCode {
     COMMENT_IS_EMPTY(2004, "评论为空"),
     COMMENT_TYPE_NOT_FOUND(2005, "评论类型不存在"),
     COMMENT_NOT_FOUND(2006, "评论不存在"),
+    NOTIFICATION_NOT_FOUND(2007, "通知不存在"),
+    READ_NOTIFICATION_FAIL(2008, "读取消息失败"),
     ;
     
     private int code;

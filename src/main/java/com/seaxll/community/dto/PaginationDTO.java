@@ -16,7 +16,9 @@ import java.util.List;
  */
 @Data
 public class PaginationDTO {
+    // private List<T> data;    // 使用泛型
     private List<QuestionDTO> questions;
+    private List<NotificationDTO> notifications;
     // 是否展示上一页
     private boolean showPrevious;
     // 是否展示第一页

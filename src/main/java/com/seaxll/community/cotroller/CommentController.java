@@ -63,7 +63,7 @@ public class CommentController {
         comment.setLikeCount(0);
         comment.setCommentCount(0);
         
-        commentService.insertComment(comment);
+        commentService.insertComment(comment, user);
 
         return ResultDTO.okOf();
     }
