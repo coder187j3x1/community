@@ -24,7 +24,7 @@ public interface NotificationMapper {
     @Select("SELECT * FROM Notification WHERE RECEIVER_ID = #{id} LIMIT #{offset}, #{size}")
     List<Notification> findNotificationByUserId(@Param("id") Integer id, @Param("offset") Integer offset, @Param("size") Integer size);
 
-    @Select("SELECT COUNT(1) FROM NOTIFICATION WHERE STATUS = 0")
+    @Select("SELECT COUNT(1) FROM NOTIFICATION WHERE STATUS = 0 AND RECEIVER_ID = #{userId}")
     Integer unreadCount(Integer userId);
 
     @Select("SELECT * FROM Notification WHERE ID = #{is}")

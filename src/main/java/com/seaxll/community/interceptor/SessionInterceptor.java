@@ -2,6 +2,7 @@ package com.seaxll.community.interceptor;
 
 import com.seaxll.community.provider.UserProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,9 +23,14 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserProvider userProvider;
 
+    @Value("${github.redirect.uri}")
+    private String redirectUri;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         userProvider.userCookieVerify(request);
+        //设置 context 级别的属性
+        request.getServletContext().setAttribute("redirectUri", redirectUri);
         return true;
     }
 

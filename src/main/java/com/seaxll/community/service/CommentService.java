@@ -66,7 +66,7 @@ public class CommentService {
             parentComment.setCommentCount(parentComment.getCommentCount() + 1);
             commentMapper.updateCommentCount(parentComment);
             // 创建通知
-            createNotify(comment, comment.getCommentatorId(), commentator.getName(), parentComment.getContent(), NotificationType.REPLY_COMMENT, parentComment.getId());
+            createNotify(comment, parentComment.getCommentatorId(), commentator.getName(), parentComment.getContent(), NotificationType.REPLY_COMMENT, parentComment.getId());
         } else {
             // 1.判断回答的问题是否存在
             Question question = questionMapper.findQuestionById(comment.getParentId());

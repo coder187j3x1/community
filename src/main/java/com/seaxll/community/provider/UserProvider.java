@@ -2,11 +2,13 @@ package com.seaxll.community.provider;
 
 import com.seaxll.community.mapper.UserMapper;
 import com.seaxll.community.model.User;
+import com.seaxll.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * ClassName: UserProvider
@@ -20,6 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 public class UserProvider {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * 验证 request 的 cookies 中是否存在用户的 token
@@ -38,7 +43,14 @@ public class UserProvider {
                     user = userMapper.findUserByToken(token);
                     if (user != null) {
                         // 将用户信息存入 session
-                        request.getSession().setAttribute("user", user);
+                        HttpSession session = request.getSession();
+                        session.setAttribute("user", user);
+                        Integer unreadCount = notificationService.unreadCount(user.getId());
+                        if (unreadCount > 0) {
+                            session.setAttribute("unreadCount", unreadCount);
+                        } else {
+                            session.removeAttribute("unreadCount");
+                        }
                     }
                     break;
                 }
