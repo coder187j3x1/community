@@ -238,8 +238,8 @@ public class QuestionService {
     public PaginationDTO findPaginationBySearch(String search, Integer page, Integer size) {
         if (org.apache.commons.lang3.StringUtils.isNotBlank(search)) {
             String[] tags = StringUtils.split(search, " ");
-            search = Arrays
-                    .stream(tags)
+            search = tags == null ? search :
+                    Arrays.stream(tags)
                     .filter(org.apache.commons.lang3.StringUtils::isNotBlank)
                     .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
                     .filter(org.apache.commons.lang3.StringUtils::isNotBlank)

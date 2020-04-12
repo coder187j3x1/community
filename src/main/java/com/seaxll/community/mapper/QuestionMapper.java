@@ -24,10 +24,10 @@ public interface QuestionMapper {
             "VALUES(#{title}, #{description}, #{gmtCreate}, #{gmtModify}, #{creatorId}, #{commentCount}, #{viewCount}, #{likeCount}, #{tag})")
     void insertQuestion(Question question);
 
-    @Select("SELECT * FROM QUESTION LIMIT #{offset}, #{size}")
+    @Select("SELECT * FROM QUESTION  ORDER BY GMT_MODIFY DESC LIMIT #{offset}, #{size}")
     List<Question> list(@Param("offset") Integer offset, @Param("size") Integer size);
 
-    @Select("SELECT * FROM QUESTION WHERE CREATOR_ID = #{id} LIMIT #{offset}, #{size}")
+    @Select("SELECT * FROM QUESTION WHERE CREATOR_ID = #{id} ORDER BY GMT_MODIFY DESC LIMIT #{offset}, #{size}")
     List<Question> findQuestionByCreateId(@Param("id") Integer id, @Param("offset") Integer offset, @Param("size") Integer size);
 
     @Select("SELECT COUNT(1) FROM QUESTION")
@@ -48,12 +48,12 @@ public interface QuestionMapper {
     @Update("UPDATE QUESTION SET COMMENT_COUNT = #{commentCount} WHERE id = #{id}")
     void updateCommentCount(Question question);
 
-    @Select("SELECT * FROM QUESTION WHERE ID != #{id} AND TAG REGEXP #{tag}")
+    @Select("SELECT * FROM QUESTION WHERE ID != #{id} AND TAG REGEXP #{tag} ORDER BY GMT_MODIFY DESC")
     List<Question> selectRelateQuestionByTag(QuestionDTO questionDTO);
 
-    @Select("SELECT * FROM QUESTION WHERE TITLE REGEXP #{tag}")
+    @Select("SELECT * FROM QUESTION WHERE TITLE REGEXP #{tag} ORDER BY GMT_MODIFY DESC")
     List<Question> selectQuestionBySearch(String search);
 
-    @Select("SELECT * FROM QUESTION WHERE TAG REGEXP #{tag}")
+    @Select("SELECT * FROM QUESTION WHERE TAG REGEXP #{tag} ORDER BY GMT_MODIFY DESC")
     List<Question> selectQuestionByTag(String tag);
 }
