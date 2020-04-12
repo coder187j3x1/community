@@ -41,6 +41,7 @@ public class QuestionController {
         if (questionDTO.getCommentCount() > 0) {
             commentDTOs = questionService.findCommentById(Integer.parseInt(id));
         }
+        questionDTO.setTag(questionDTO.getTag().replaceAll(",", "|"));
         List<QuestionDTO> relatedQuestions = questionService.findRelateQuestionByTag(questionDTO);
         model.addAttribute("comments", commentDTOs);
         model.addAttribute("relatedQuestions", relatedQuestions);

@@ -50,4 +50,10 @@ public interface QuestionMapper {
 
     @Select("SELECT * FROM QUESTION WHERE ID != #{id} AND TAG REGEXP #{tag}")
     List<Question> selectRelateQuestionByTag(QuestionDTO questionDTO);
+
+    @Select("SELECT * FROM QUESTION WHERE TITLE REGEXP #{tag}")
+    List<Question> selectQuestionBySearch(String search);
+
+    @Select("SELECT * FROM QUESTION WHERE TAG REGEXP #{tag}")
+    List<Question> selectQuestionByTag(String tag);
 }

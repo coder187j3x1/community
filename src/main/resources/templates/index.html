@@ -80,6 +80,8 @@
             <!--<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>热门标签</h4>
+                <a th:each="tag : ${tags}" th:href="@{/tag(tag=${tag})}"
+                   th:text="${tag}" class="community-tag"></a>
             </div>
         </div>
     </div>

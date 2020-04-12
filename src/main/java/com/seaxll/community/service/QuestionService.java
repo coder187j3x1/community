@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -196,5 +197,57 @@ public class QuestionService {
         List<Question> questions = questionMapper.selectRelateQuestionByTag(questionDTO);
         questions.forEach(question -> relatedQuestions.add(new QuestionDTO(question)));
         return relatedQuestions;
+    }
+
+    public PaginationDTO findQuestionByTag(String tag, Integer page, Integer size) {
+
+        List<QuestionDTO> questionDTOS = new ArrayList<>();
+        List<Question> questions = questionMapper.selectQuestionByTag(tag.replaceAll(",", "|"));
+        questions.forEach(question -> questionDTOS.add(new QuestionDTO(question)));
+
+        PaginationDTO pagination = new PaginationDTO();
+        Integer count = questionDTOS.size();
+        Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
+        pagination.setPagination(totalPage, page);
+        pagination.setQuestions(questionDTOS);
+        return pagination;
+    }
+
+    /**
+     * 搜索
+     * @param search
+     *      String
+     * @param page
+     *      Integer
+     * @param size
+     *      Integer
+     * @return
+     *      PaginationDTO
+     */
+    public PaginationDTO getQuestionListBySearch(String search, Integer page, Integer size) {
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(search)) {
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays
+                    .stream(tags)
+                    .filter(org.apache.commons.lang3.StringUtils::isNotBlank)
+                    .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
+                    .filter(org.apache.commons.lang3.StringUtils::isNotBlank)
+                    .collect(Collectors.joining("|"));
+        }
+        List<Question> questions = questionMapper.selectQuestionBySearch(search);
+        PaginationDTO pagination = new PaginationDTO();
+        // 构造 QuestionDTO
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        for (Question question : questions) {
+            QuestionDTO questionDTO = new QuestionDTO(question);
+            User user = userMapper.findUserById(question.getCreatorId());
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+        pagination.setQuestions(questionDTOList);
+        Integer count = questions.size();
+        Integer totalPage = (count % size == 0) ? (count / size) : (count / size + 1);
+        pagination.setPagination(totalPage, page);
+        return pagination;
     }
 }
