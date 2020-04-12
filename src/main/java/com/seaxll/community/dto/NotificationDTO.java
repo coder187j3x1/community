@@ -2,6 +2,8 @@ package com.seaxll.community.dto;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 /**
  * ClassName: NotificationDTO
  * Description:
@@ -12,13 +14,14 @@ import lombok.Data;
  */
 @Data
 public class NotificationDTO {
-    private Long id;
-    private Long gmtCreate;
+    private Integer id;
+    private Integer notifierId;
+    private Integer receiverId;
+    private Integer outerId;
+    private Integer type;
+    private Timestamp gmtCreate;
     private Integer status;
-    private Long notifier;
     private String notifierName;
     private String outerTitle;
-    private Long outerid;
     private String typeName;
-    private Integer type;
 }
