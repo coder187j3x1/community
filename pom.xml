@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <fastjson.version>1.2.57</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <h2.version>1.4.200</h2.version>
         <springboot.mybatis.version>2.1.1</springboot.mybatis.version>
         <lombok.version>1.18.12</lombok.version>
